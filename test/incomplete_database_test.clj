@@ -7,6 +7,39 @@
 	varon
 ")
 
+(deftest valid-fact-test
+    (testing "'varon' should be an invalid fact"
+        (is (= (valid-fact "varon")
+            false))) 
+    (testing "'varon' should be a valid fact"
+        (is (= (valid-fact "varon(juan)")
+            true))) 
+    (testing "'padre(juan, pepe)' should be a valid fact"
+        (is (= (valid-fact "padre(juan, pepe)")
+            true))) 
+)
+
+(deftest valid-rule-test
+    (testing "'varon' should be an invalid rule"
+        (is (= (valid-rule "varon")
+            false))) 
+    (testing "'hijo(X, Y) :- varon(X), padre(Y, X)' should be a valid rule"
+        (is (= (valid-rule "hijo(X, Y) :- varon(X), padre(Y, X)")
+            true)))
+)
+
+(deftest valid-relation-element-test
+    (testing "'varon' should be an invalid relation element"
+        (is (= (valid-relation-element "varon")
+            false))) 
+    (testing "'varon' should be a valid relation element"
+        (is (= (valid-relation-element "varon(juan)")
+            true))) 
+    (testing "'hijo(X, Y) :- varon(X), padre(Y, X)' should be a valid relation element"
+        (is (= (valid-relation-element "hijo(X, Y) :- varon(X), padre(Y, X)")
+            true)))
+)
+
 (deftest incomplete-database-fact-test
   (testing "varon(juan) should be nil"
     (is (= (evaluate-query incomplete-database "varon(juan)")
