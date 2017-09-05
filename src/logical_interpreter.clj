@@ -1,31 +1,31 @@
 (ns logical-interpreter)
 
-(def FACT-PATTERN #"^[a-zA-Z]*\([a-zA-Z,\ ]*\)")
-(def RULE-PATTERN #"^.* :- .*$")
+; (def FACT-PATTERN #"^[a-zA-Z]*\([a-zA-Z,\ ]*\)")
+; (def RULE-PATTERN #"^.* :- .*$")
 
-(defn valid-pattern
-	"Checks if the input has a valid pattern"
-	[input pattern]
-	(not (nil? (re-matches pattern input)))
-)
+; (defn valid-pattern
+; 	"Checks if the input has a valid pattern"
+; 	[input pattern]
+; 	(not (nil? (re-matches pattern input)))
+; )
 
-(defn valid-fact
-	"Checks if the input has a valid fact pattern"
-	[input]
-	(valid-pattern input FACT-PATTERN)
-)
+; (defn valid-fact
+; 	"Checks if the input has a valid fact pattern"
+; 	[input]
+; 	(valid-pattern input FACT-PATTERN)
+; )
 
-(defn valid-rule
-	"Checks if the input has a valid fact pattern"
-	[input]
-	(valid-pattern input RULE-PATTERN)
-)
+; (defn valid-rule
+; 	"Checks if the input has a valid fact pattern"
+; 	[input]
+; 	(valid-pattern input RULE-PATTERN)
+; )
 
-(defn valid-relation-element
-	"Checks if the input is a valid rule or a valid fact"
-	[input]
-	(or (valid-fact input) (valid-rule input))
-)
+; (defn valid-relation-element
+; 	"Checks if the input is a valid rule or a valid fact"
+; 	[input]
+; 	(or (valid-fact input) (valid-rule input))
+; )
 
 
 (defn valid-relations
@@ -45,9 +45,14 @@
 			databaseArray4 (filter (fn [x] (not= x "")) databaseArray3) ; Elimina elementos vacios
 		]
 		databaseArray4
-		; (filter (fn [x] (not= x "")) (map (fn [v] (clojure.string/trim v)) databaseArray2)) ; saca los espacios iniciales y finales, y elimina elementos vacios
 	)
 )
+
+; (defn split-fact
+; 	"Receives a string, and returns the fact name"
+; 	[input]
+; 	(re-find #"^([a-zA-Z]*)\(([a-zA-Z,\ ]*)\)" input)
+; )
 
 (defn evaluate-query
 	"Returns true if the rules and facts in database imply query, false if not. If
@@ -55,6 +60,7 @@
   	[database query]
 	(
 		let [relations (parse-database database)]
+		(println (split-fact query))
 		(if (false? (valid-relations relations))
 			nil
 			(not (nil? (some (fn [v] (= v query)) relations)))
