@@ -36,18 +36,24 @@
 
 
 (deftest parent-database-fact-test
+  (testing "primo(marcos) should be false"
+    (is (= (evaluate-query parent-database "primo(marcos)")
+           false)))
   (testing "varon(juan) should be true"
     (is (= (evaluate-query parent-database "varon(juan)")
            true)))
-  (testing "varon(juan) should be true"
+  (testing "varon(pepe) should be true"
     (is (= (evaluate-query parent-database "varon(pepe)")
            true)))
-  (testing "varon(juan) should be true"
+  (testing "varon(hector) should be true"
     (is (= (evaluate-query parent-database "varon(hector)")
            true)))
   (testing "varon(maria) should be false"
     (is (= (evaluate-query parent-database "varon(maria)")
            false)))
+  (testing "mujer(maria) should be true"
+    (is (= (evaluate-query parent-database "mujer(maria)")
+           true)))
   (testing "mujer(cecilia) should be true"
     (is (= (evaluate-query parent-database "mujer(cecilia)")
            true)))
