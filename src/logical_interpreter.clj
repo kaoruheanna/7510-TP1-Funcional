@@ -41,8 +41,8 @@
 	(reduce add-fact-element-to-map {} factsArray)
 )
 
-(defn parse-database
-	"Receives the database string, parse it and return the relatios array"
+(defn parse-database-string
+	"Receives the database string, parse it and return a relations strings array"
 	[database]
 	(
 		let [
@@ -50,7 +50,17 @@
 			databaseArray2 (map (fn [v] (clojure.string/replace v #"\." "")) databaseArray) ;Elimina el punto de cada elemento
 			databaseArray3 (map (fn [v] (clojure.string/trim v)) databaseArray2) ; saca los espacios iniciales y finales
 			databaseArray4 (filter (fn [x] (not= x "")) databaseArray3) ; Elimina elementos vacios
-			factsArray (get-facts-array databaseArray4)
+		]
+		databaseArray4
+	)
+)
+
+(defn generate-fact-map
+	"Receives an array with the input strings array, filter to process only facts and generate the facts map"
+	[inputsArray]
+	(
+		let [
+			factsArray (get-facts-array (filter valid-fact inputsArray))
 		]
 		(get-fact-map-from-fact-array factsArray)
 	)
@@ -77,20 +87,23 @@
 	)
 )
 
-; (not (nil? (some (fn [v] (= v query)) relations)))
 (defn evaluate-query
 	"Returns true if the rules and facts in database imply query, false if not. If
 	either input can't be parsed, returns nil"
   	[database query]
 	(
-		let [factMap (parse-database database)]
-		(evaluate-fact factMap query)
-		; (if (false? (valid-relations relations))
-		; 	nil
-		; 	(not (nil? (some (fn [v] (= v query)) relations)))
-		; )
-		; Chequea que la query este en el array
-		; Si ningun elemento del array cumple la condicion, some devuelve nil
+		let [
+			inputStringsArray (parse-database-string database)
+		]
+		(if (false? (valid-relations inputStringsArray))
+			nil
+			(
+				let [
+					factMap (generate-fact-map inputStringsArray)
+				]
+				(evaluate-fact factMap query)
+			)
+		)
 	)
 )
 
