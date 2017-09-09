@@ -122,3 +122,13 @@
         )
     ) 
 )
+
+(deftest facts-map-test
+    (testing "generate facts map"
+        (is (= 
+        		(get-fact-map-from-fact-array facts-array)
+            	hashmapTest7
+            )
+        )
+    ) 
+)

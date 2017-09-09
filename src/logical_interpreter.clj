@@ -32,23 +32,13 @@
 			)
 			(merge factMap { methodName inputListArgs })
 		)
-
-		; (println factElement)
-		; (println (str "metodo:" methodName))
-		; (println (str "args:" argsElement))
-		; (println factMap)
-		; (println (type methodName))
-		; (println (type :varon))
-		; (println (get factMap methodName))
-
-		; (println (contains? {"varon" "kao"} lala))
-		; (println (get {"varon" "kao"} lala))
-		; (if (contains? factMap methodName)
-		; 	(println "lo tiene")
-		; 	(println "no lo tiene")
-		; )
-		; {"varon" '( '("juan"))}
 	)
+)
+
+(defn get-fact-map-from-fact-array
+	"Receives the facts array, and return the fact map"
+	[factsArray]
+	(reduce add-fact-element-to-map {} factsArray)
 )
 
 (defn parse-database
