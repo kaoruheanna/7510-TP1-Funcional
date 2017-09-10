@@ -24,3 +24,7 @@ lein test
 
 ## Run Repl
 lein repl
+
+#Se ejecuta con:
+lein run <database path> "<query>"
+Por ejemplo: lein run input/number.txt "add(one, zero, one)"
