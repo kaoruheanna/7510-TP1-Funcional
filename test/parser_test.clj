@@ -103,21 +103,6 @@
             (:args (split-rule "subtract(A, B, C) :- add(B, C, A)"))
             '("A" "B" "C")
         )))
-    ; (testing "facts varon(X), padre(Y, X)"
-    ;     (is (= 
-    ;         (:facts (split-rule "hijo(X, Y) :- varon(X), padre(Y, X)"))
-    ;         "varon(X), padre(Y, X)"
-    ;     )))
-    ; (testing "facts mujer(X), padre(Y, X)"
-    ;     (is (= 
-    ;         (:facts (split-rule "hija(X, Y) :- mujer(X), padre(Y, X)"))
-    ;         "mujer(X), padre(Y, X)"
-    ;     )))
-    ; (testing "facts add(Y, Z, X)"
-    ;     (is (= 
-    ;         (:facts (split-rule "subtract(X, Y, Z) :- add(Y, Z, X)"))
-    ;         "add(Y, Z, X)"
-    ;     )))
     (testing "facts varon(X), padre(Y, X)"
         (is (= 
             (:facts (split-rule "hijo(X, Y) :- varon(X), padre(Y, X)"))

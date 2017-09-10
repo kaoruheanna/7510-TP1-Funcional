@@ -65,7 +65,7 @@
 )
 
 (defn split-rule
-	"Receives a string and returns "
+	"Receives a string and returns a rule record"
 	[input]
 	(
 		let [
@@ -73,6 +73,20 @@
 			ruleName (nth splitted-hash 1)
 			args (get-args-array (nth splitted-hash 2))
 			facts (get-facts-from-rule-string input)
+		]
+		(new-rule ruleName args facts)
+	)
+)
+
+(defn split-rule-query
+	"Receives a rule query string and returns a rule record with empty facts"
+	[input]
+	(
+		let [
+			splitted (splitted-hash (re-find FACT-PATTERN input)) ;el query de rule tiene el mismo formato que un fact
+			ruleName (:method splitted)
+			args (:args splitted)
+			facts nil
 		]
 		(new-rule ruleName args facts)
 	)

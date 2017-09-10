@@ -8,8 +8,16 @@
 	(every? (fn [v] (valid-relation-element v)) relations)
 )
 
+(defn is-value-in-list
+	"Receives a list and a value, and checks if the list contains the value"
+	[haystack needle]
+	(not (nil? (some (fn [v] (= v needle)) haystack)))
+)
+
+; --------- FACTS -------------
+
 (defn get-facts-array
-	" "
+	"Receives the array with all the facts strings, and returns an array containting the facts hashmaps"
 	[factsStringsArray]
 	(map split-fact factsStringsArray)
 )
@@ -41,22 +49,8 @@
 	(reduce add-fact-element-to-map {} factsArray)
 )
 
-(defn parse-database-string
-	"Receives the database string, parse it and return a relations strings array"
-	[database]
-	(
-		let [
-			databaseArray (clojure.string/split-lines database) ; Separa el input en un array por cada linea
-			databaseArray2 (map (fn [v] (clojure.string/replace v #"\." "")) databaseArray) ;Elimina el punto de cada elemento
-			databaseArray3 (map (fn [v] (clojure.string/trim v)) databaseArray2) ; saca los espacios iniciales y finales
-			databaseArray4 (filter (fn [x] (not= x "")) databaseArray3) ; Elimina elementos vacios
-		]
-		databaseArray4
-	)
-)
-
 (defn generate-fact-map
-	"Receives an array with the input strings array, filter to process only facts and generate the facts map"
+	"Receives an array with the input strings array, filter to process only facts and generates the facts map"
 	[inputsArray]
 	(
 		let [
@@ -64,12 +58,6 @@
 		]
 		(get-fact-map-from-fact-array factsArray)
 	)
-)
-
-(defn is-value-in-list
-	"Receives a list and a value, and checks if the list contains the value"
-	[haystack needle]
-	(not (nil? (some (fn [v] (= v needle)) haystack)))
 )
 
 (defn evaluate-fact
@@ -86,6 +74,68 @@
 		)
 	)
 )
+; --------- END FACTS -------------
+
+; --------- RULES -------------
+(defn get-rules-array
+	"Receives the array with all the rules strings, and returns an array containting the Rule records"
+	[rulesStringsArray]
+	(map split-rule rulesStringsArray)
+)
+
+(defn add-rule-element-to-map
+	"Receives the rule map and a rule element. Adds the rule and returns the new rule map"
+	[ruleMap ruleElement]
+	(merge ruleMap { (:rname ruleElement) ruleElement })
+)
+
+
+(defn get-rule-map-from-rule-array
+	"Receives the rules array, and return the rule map"
+	[rulesArray]
+	(reduce add-rule-element-to-map {} rulesArray)
+)
+
+(defn generate-rule-map
+	"Receives an array with the input strings array, filter to process only rules and generates the rule map"
+	[inputsArray]
+	(
+		let [
+			rulesArray (get-rules-array (filter valid-rule inputsArray))
+		]
+		(get-rule-map-from-rule-array rulesArray)
+	)
+)
+
+(defn evaluate-rule
+	"Evaluates if the received fact is true"
+	[ruleMap factMap query]
+	(
+		let [
+			queryRule (split-rule-query query)
+		]
+		(if (contains? ruleMap (:rname queryRule))
+			true
+			false
+		)
+	)
+)
+
+; --------- END RULES -------------
+
+(defn parse-database-string
+	"Receives the database string, parse it and return a relations strings array"
+	[database]
+	(
+		let [
+			databaseArray (clojure.string/split-lines database) ; Separa el input en un array por cada linea
+			databaseArray2 (map (fn [v] (clojure.string/replace v #"\." "")) databaseArray) ;Elimina el punto de cada elemento
+			databaseArray3 (map (fn [v] (clojure.string/trim v)) databaseArray2) ; saca los espacios iniciales y finales
+			databaseArray4 (filter (fn [x] (not= x "")) databaseArray3) ; Elimina elementos vacios
+		]
+		databaseArray4
+	)
+)
 
 (defn evaluate-query
 	"Returns true if the rules and facts in database imply query, false if not. If
@@ -100,8 +150,12 @@
 			(
 				let [
 					factMap (generate-fact-map inputStringsArray)
+					ruleMap (generate-rule-map inputStringsArray)
 				]
-				(evaluate-fact factMap query)
+				(or 
+					(evaluate-fact factMap query)
+					(evaluate-rule ruleMap factMap query)
+				)
 			)
 		)
 	)
