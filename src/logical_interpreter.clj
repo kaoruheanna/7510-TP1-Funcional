@@ -107,15 +107,40 @@
 	)
 )
 
+(defn replace-args-in-fact
+	"Receives the fact string, and the args translation list, and the returns the fact with the args replaced"
+	[fact argsTranslation]
+	(reduce 
+		(fn [text args] 
+			(clojure.string/replace text (first args) (second args))
+		)
+		fact
+		argsTranslation
+	)
+)
+
+(defn check-facts-for-rule
+	""
+	[rule factMap queryRule]
+	(
+		let [
+			args (map list (:args rule) (:args queryRule))
+		]	
+		(println args)
+	)
+	true
+)
+
 (defn evaluate-rule
 	"Evaluates if the received fact is true"
 	[ruleMap factMap query]
 	(
 		let [
 			queryRule (split-rule-query query)
+			ruleName (:rname queryRule)
 		]
-		(if (contains? ruleMap (:rname queryRule))
-			true
+		(if (contains? ruleMap ruleName)
+			(check-facts-for-rule (get ruleMap ruleName) factMap queryRule)
 			false
 		)
 	)
