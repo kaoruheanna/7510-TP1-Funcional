@@ -21,6 +21,18 @@
     (testing "'hijo(X, Y) :- varon(X), padre(Y, X)' should be a valid rule"
         (is (= (valid-rule "hijo(X, Y) :- varon(X), padre(Y, X)")
             true)))
+    (testing "'hijo(X, Y) :- ' should be an invalid rule"
+        (is (= (valid-rule "hijo(X, Y) :- ")
+            false)))
+    (testing "' :- varon(X), padre(Y, X)' should be an invalid rule"
+        (is (= (valid-rule " :- varon(X), padre(Y, X)")
+            false)))
+    (testing "'hijo(X, Y) :- varon(X),' should be an invalid rule"
+        (is (= (valid-rule "hijo(X, Y) :- varon(X),")
+            false)))
+    (testing "'subtract(X, Y, Z) :- add(Y, Z, X)' should be a valid rule"
+        (is (= (valid-rule "subtract(X, Y, Z) :- add(Y, Z, X)")
+            true)))
 )
 
 (deftest valid-relation-element-test
@@ -35,7 +47,7 @@
             true)))
 )
 
-(deftest fact-hash-map
+(deftest fact-hash-map-test
     (testing "'hashmap equivalence equal"
         (is (= {:name "Steve" :age 24 :salary 7886 :company "Acme"} {:name "Steve" :age 24 :salary 7886 :company "Acme"})
             ))
@@ -63,5 +75,63 @@
     (testing "add(zero, zero, zero)"
         (is (= (split-fact "add(zero, zero, zero)") {:method "add" :args '("zero" "zero" "zero") } )
             ))
+)
+
+(deftest rule-name-test
+    (testing "hijo"
+        (is (= 
+            (:rname (split-rule "hijo(X, Y) :- varon(X), padre(Y, X)"))
+            "hijo"
+        )))
+    (testing "hija"
+        (is (= 
+            (:rname (split-rule "hija(X, Y) :- mujer(X), padre(Y, X)"))
+            "hija"
+        )))
+    (testing "rule args (X Y)"
+        (is (= 
+            (:args (split-rule "hija(X, Y) :- mujer(X), padre(Y, X)"))
+            '("X" "Y")
+        )))
+    (testing "rule args (X, Y, Z)"
+        (is (= 
+            (:args (split-rule "subtract(X, Y, Z) :- add(Y, Z, X)"))
+            '("X" "Y" "Z")
+        )))
+    (testing "rule args (A, B, C)"
+        (is (= 
+            (:args (split-rule "subtract(A, B, C) :- add(B, C, A)"))
+            '("A" "B" "C")
+        )))
+    ; (testing "facts varon(X), padre(Y, X)"
+    ;     (is (= 
+    ;         (:facts (split-rule "hijo(X, Y) :- varon(X), padre(Y, X)"))
+    ;         "varon(X), padre(Y, X)"
+    ;     )))
+    ; (testing "facts mujer(X), padre(Y, X)"
+    ;     (is (= 
+    ;         (:facts (split-rule "hija(X, Y) :- mujer(X), padre(Y, X)"))
+    ;         "mujer(X), padre(Y, X)"
+    ;     )))
+    ; (testing "facts add(Y, Z, X)"
+    ;     (is (= 
+    ;         (:facts (split-rule "subtract(X, Y, Z) :- add(Y, Z, X)"))
+    ;         "add(Y, Z, X)"
+    ;     )))
+    (testing "facts varon(X), padre(Y, X)"
+        (is (= 
+            (:facts (split-rule "hijo(X, Y) :- varon(X), padre(Y, X)"))
+            '("varon(X)" "padre(Y, X)")
+        )))
+    (testing "facts mujer(X), padre(Y, X)"
+        (is (= 
+            (:facts (split-rule "hija(X, Y) :- mujer(X), padre(Y, X)"))
+            '("mujer(X)" "padre(Y, X)")
+        )))
+    (testing "facts add(Y, Z, X)"
+        (is (= 
+            (:facts (split-rule "subtract(X, Y, Z) :- add(Y, Z, X)"))
+            '("add(Y, Z, X)")
+        )))
 )
 
