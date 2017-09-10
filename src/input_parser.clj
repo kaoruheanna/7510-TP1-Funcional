@@ -72,7 +72,7 @@
 			splitted-hash (re-find RULE-PATTERN input)
 			ruleName (nth splitted-hash 1)
 			args (get-args-array (nth splitted-hash 2))
-			facts (get-facts-from-rule-string input)
+			facts (apply list (get-facts-from-rule-string input))
 		]
 		(new-rule ruleName args facts)
 	)

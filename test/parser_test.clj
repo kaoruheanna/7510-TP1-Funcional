@@ -113,10 +113,20 @@
             (:facts (split-rule "hija(X, Y) :- mujer(X), padre(Y, X)"))
             '("mujer(X)" "padre(Y, X)")
         )))
+    (testing "facts mujer(X), padre(Y, X)"
+        (is (= 
+            (count (:facts (split-rule "hija(X, Y) :- mujer(X), padre(Y, X)")))
+            2
+        )))
     (testing "facts add(Y, Z, X)"
         (is (= 
             (:facts (split-rule "subtract(X, Y, Z) :- add(Y, Z, X)"))
             '("add(Y, Z, X)")
+        )))
+    (testing "facts add(Y, Z, X)"
+        (is (= 
+            (count (:facts (split-rule "subtract(X, Y, Z) :- add(Y, Z, X)")))
+            1
         )))
 )
 

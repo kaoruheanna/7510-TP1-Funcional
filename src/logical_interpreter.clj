@@ -120,19 +120,23 @@
 )
 
 (defn check-facts-for-rule
-	""
+	"Evaluates if every fact for the rule is true"
 	[rule factMap queryRule]
 	(
 		let [
-			args (map list (:args rule) (:args queryRule))
-		]	
-		(println args)
+			argsTranslation (map list (:args rule) (:args queryRule))
+			translatedFacts (map (fn[v] (replace-args-in-fact v argsTranslation) ) (:facts rule) )
+		]
+		(reduce 
+			(fn [prev fact] (and prev (evaluate-fact factMap fact)))
+			true
+			translatedFacts
+		)
 	)
-	true
 )
 
 (defn evaluate-rule
-	"Evaluates if the received fact is true"
+	"Evaluates if the received rule is true"
 	[ruleMap factMap query]
 	(
 		let [
@@ -170,7 +174,7 @@
 		let [
 			inputStringsArray (parse-database-string database)
 		]
-		(if (false? (valid-relations inputStringsArray))
+		(if (or (false? (valid-relations inputStringsArray)) (false? (valid-fact query)) )
 			nil
 			(
 				let [

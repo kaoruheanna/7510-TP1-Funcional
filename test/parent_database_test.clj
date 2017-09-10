@@ -49,21 +49,21 @@
            false)))
 )
 
-; (deftest parent-database-rule-test
-;   (testing "hijo(pepe, juan) should be true"
-;     (is (= (evaluate-query parent-database "hijo(pepe, juan)")
-;            true)))
-;   (testing "hija(maria, roberto) should be false"
-;     (is (= (evaluate-query parent-database "hija(maria, roberto)")
-;            false))))
+(deftest parent-database-rule-test
+  (testing "hijo(pepe, juan) should be true"
+    (is (= (evaluate-query parent-database "hijo(pepe, juan)")
+           true)))
+  (testing "hija(maria, roberto) should be false"
+    (is (= (evaluate-query parent-database "hija(maria, roberto)")
+           false))))
 
-; (deftest parent-database-empty-query-test
-;   (testing "varon should be nil"
-;     (is (= (evaluate-query parent-database "varon")
-;            nil)))
-;   (testing "maria should be nil"
-;     (is (= (evaluate-query parent-database "maria")
-;            nil)))
-;   (testing "empty should be nil"
-;     (is (= (evaluate-query parent-database "")
-;            nil))))
+(deftest parent-database-empty-query-test
+  (testing "varon should be nil"
+    (is (= (evaluate-query parent-database "varon")
+           nil)))
+  (testing "maria should be nil"
+    (is (= (evaluate-query parent-database "maria")
+           nil)))
+  (testing "empty should be nil"
+    (is (= (evaluate-query parent-database "")
+           nil))))
